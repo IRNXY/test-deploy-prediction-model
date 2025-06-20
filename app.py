@@ -47,7 +47,7 @@ def predict():
 
         prediction = model.predict(test_data)
     print("Prediction result:")
-    return str(prediction)
+    return str(prediction[0])
 
 
 if __name__ == '__main__':
