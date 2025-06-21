@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, request
 import pickle
 
 flask_app = Flask(__name__)
@@ -15,8 +15,6 @@ def index():
 @flask_app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
-
-    # print("Полученные данные:", data)
 
     if "option" in data.keys():
         option = data["option"]
@@ -46,7 +44,6 @@ def predict():
                 test_data[i] = data[i]
 
         prediction = model.predict(test_data)
-    # print("Prediction result:")
     return str(prediction[0])
 
 
