@@ -1,37 +1,42 @@
 import sys
 import os
 
-# Добавляем путь к родительской папке
-sys.path.append(os.path.abspath(".."))
+# Добавить путь к корневой директории (где app.py)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-from app import app
+from app import flask_app
+
+
+tester = flask_app.test_client()
 
 
 def test_home():
-    tester = app.test_client()
     response = tester.get("/")
     assert response.status_code == 200
 
 
 def test_predict():
-    client = app.test_client()
-    payload = {"option": 1}
+    print("Testing different options (from 1 to 4)")
+    for i in range(1, 5):
+        payload = {"option": i}
 
-    response = client.post("/predict", json=payload)
-    if response.status_code == 200:
-        raise f"Can not get the access to website: {response.status_code}"
+        response = tester.post("/predict", json=payload)
+        if response.status_code == "200":
+            raise Exception(f"Can not get the access to website: {response.status_code}")
 
-    try:
-        text = response.get_data(as_text=True)
-    except Exception as e:
-        raise e
+        try:
+            text = response.get_data(as_text=True)
+        except Exception as e:
+            raise e
 
-    if type(text) != str:
-        raise f"Wrong return type: {type(text)}"
+        try:
+            text = float(text)
+        except Exception as e:
+            raise e
 
-    if int(text) != 1:
-        raise f"Wrong answer: {text}.\n Expected: 1.0"
+        if float(text) != 1:
+            raise Exception(f"Wrong answer: {text}.\n Expected: 1.0")
 
 
 if __name__ == "__main__":

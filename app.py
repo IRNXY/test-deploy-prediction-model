@@ -1,22 +1,22 @@
 from flask import Flask, render_template, request
 import pickle
 
-app = Flask(__name__)
+flask_app = Flask(__name__)
 
 with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
 
-@app.route('/')
+@flask_app.route('/')
 def index():
     return "Welcome to the prediction model. Use /predict command to make predictions. "
 
 
-@app.route('/predict', methods=['POST'])
+@flask_app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
 
-    print("Полученные данные:", data)
+    # print("Полученные данные:", data)
 
     if "option" in data.keys():
         option = data["option"]
@@ -46,9 +46,9 @@ def predict():
                 test_data[i] = data[i]
 
         prediction = model.predict(test_data)
-    print("Prediction result:")
+    # print("Prediction result:")
     return str(prediction[0])
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080)
+    flask_app.run(host="0.0.0.0", port=8080)
