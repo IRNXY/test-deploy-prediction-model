@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Добавляем путь к родительской папке
+sys.path.append(os.path.abspath(".."))
+
+
 from app import app
 
 
